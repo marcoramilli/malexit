@@ -1,0 +1,525 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+   "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+  <title></title>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <style type="text/css">
+td.linenos { background-color: #f0f0f0; padding-right: 10px; }
+span.lineno { background-color: #f0f0f0; padding: 0 5px 0 5px; }
+pre { line-height: 125%; }
+body .hll { background-color: #ffffcc }
+body  { background: #f8f8f8; }
+body .c { color: #408080; font-style: italic } /* Comment */
+body .err { border: 1px solid #FF0000 } /* Error */
+body .k { color: #008000; font-weight: bold } /* Keyword */
+body .o { color: #666666 } /* Operator */
+body .cm { color: #408080; font-style: italic } /* Comment.Multiline */
+body .cp { color: #BC7A00 } /* Comment.Preproc */
+body .c1 { color: #408080; font-style: italic } /* Comment.Single */
+body .cs { color: #408080; font-style: italic } /* Comment.Special */
+body .gd { color: #A00000 } /* Generic.Deleted */
+body .ge { font-style: italic } /* Generic.Emph */
+body .gr { color: #FF0000 } /* Generic.Error */
+body .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+body .gi { color: #00A000 } /* Generic.Inserted */
+body .go { color: #888888 } /* Generic.Output */
+body .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+body .gs { font-weight: bold } /* Generic.Strong */
+body .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+body .gt { color: #0044DD } /* Generic.Traceback */
+body .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+body .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+body .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+body .kp { color: #008000 } /* Keyword.Pseudo */
+body .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+body .kt { color: #B00040 } /* Keyword.Type */
+body .m { color: #666666 } /* Literal.Number */
+body .s { color: #BA2121 } /* Literal.String */
+body .na { color: #7D9029 } /* Name.Attribute */
+body .nb { color: #008000 } /* Name.Builtin */
+body .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+body .no { color: #880000 } /* Name.Constant */
+body .nd { color: #AA22FF } /* Name.Decorator */
+body .ni { color: #999999; font-weight: bold } /* Name.Entity */
+body .ne { color: #D2413A; font-weight: bold } /* Name.Exception */
+body .nf { color: #0000FF } /* Name.Function */
+body .nl { color: #A0A000 } /* Name.Label */
+body .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+body .nt { color: #008000; font-weight: bold } /* Name.Tag */
+body .nv { color: #19177C } /* Name.Variable */
+body .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+body .w { color: #bbbbbb } /* Text.Whitespace */
+body .mb { color: #666666 } /* Literal.Number.Bin */
+body .mf { color: #666666 } /* Literal.Number.Float */
+body .mh { color: #666666 } /* Literal.Number.Hex */
+body .mi { color: #666666 } /* Literal.Number.Integer */
+body .mo { color: #666666 } /* Literal.Number.Oct */
+body .sb { color: #BA2121 } /* Literal.String.Backtick */
+body .sc { color: #BA2121 } /* Literal.String.Char */
+body .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+body .s2 { color: #BA2121 } /* Literal.String.Double */
+body .se { color: #BB6622; font-weight: bold } /* Literal.String.Escape */
+body .sh { color: #BA2121 } /* Literal.String.Heredoc */
+body .si { color: #BB6688; font-weight: bold } /* Literal.String.Interpol */
+body .sx { color: #008000 } /* Literal.String.Other */
+body .sr { color: #BB6688 } /* Literal.String.Regex */
+body .s1 { color: #BA2121 } /* Literal.String.Single */
+body .ss { color: #19177C } /* Literal.String.Symbol */
+body .bp { color: #008000 } /* Name.Builtin.Pseudo */
+body .vc { color: #19177C } /* Name.Variable.Class */
+body .vg { color: #19177C } /* Name.Variable.Global */
+body .vi { color: #19177C } /* Name.Variable.Instance */
+body .il { color: #666666 } /* Literal.Number.Integer.Long */
+
+  </style>
+</head>
+<body>
+<h2></h2>
+
+<div class="highlight"><pre><span class="c">#!/usr/bin/env python2</span>
+
+<span class="c">#===============================================================================#</span>
+<span class="c">#               THIS IS NOT A PRODUCTION RELEASED SOFTWARE                      #</span>
+<span class="c">#===============================================================================#</span>
+<span class="c"># Purpose of finMaliciousRelayPoints is to proof the way it&#39;s possible to       #</span>
+<span class="c"># discover TOR malicious Relays Points. Please do not use it in any production  #</span>
+<span class="c"># environment                                                                   #</span>
+<span class="c"># Author: Marco Ramilli                                                         #</span>
+<span class="c"># eMail: XXXXXXXX                                                               #</span>
+<span class="c"># WebSite: marcoramilli.blogspot.com                                            #</span>
+<span class="c"># Use it at your own                                                            #</span>
+<span class="c">#===============================================================================#</span>
+
+<span class="c">#==============================Disclaimer: =====================================#</span>
+<span class="c">#THIS SOFTWARE IS PROVIDED BY THE AUTHOR &quot;AS IS&quot; AND ANY EXPRESS OR             #</span>
+<span class="c">#IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED                 #</span>
+<span class="c">#WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE         #</span>
+<span class="c">#DISCLAIMED. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT,             #</span>
+<span class="c">#INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES             #</span>
+<span class="c">#(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR             #</span>
+<span class="c">#SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)             #</span>
+<span class="c">#HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,            #</span>
+<span class="c">#STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING          #</span>
+<span class="c">#IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE             #</span>
+<span class="c">#POSSIBILITY OF SUCH DAMAGE.                                                    #</span>
+<span class="c">#===============================================================================#</span>
+
+
+
+
+<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c">#------------------- GENERAL SECTION -------------------------------------------</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="kn">import</span> <span class="nn">StringIO</span>
+<span class="kn">import</span> <span class="nn">tempfile</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">hashlib</span>
+<span class="kn">import</span> <span class="nn">traceback</span>
+<span class="kn">from</span>   <span class="nn">geoip</span>         <span class="kn">import</span>  <span class="n">geolite2</span>
+<span class="kn">import</span> <span class="nn">stem.control</span>
+
+<span class="n">TRUSTED_HOP_FINGERPRINT</span> <span class="o">=</span> <span class="s">&#39;379FB450010D17078B3766C2273303C358C3A442&#39;</span> <span class="c">#trusted hop</span>
+<span class="n">SOCKS_PORT</span>              <span class="o">=</span> <span class="mi">9050</span>
+<span class="n">CONNECTION_TIMEOUT</span>      <span class="o">=</span> <span class="mi">30</span>  <span class="c"># timeout before we give up on a circuit</span>
+
+<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c">#---------------- File Patching Section ----------------------------------------</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="kn">import</span> <span class="nn">pycurl</span>
+
+<span class="n">check_files</span>               <span class="o">=</span> <span class="p">{</span>
+                                <span class="s">&quot;http://live.sysinternals.com/psexec.exe&quot;</span><span class="p">,</span>
+                                <span class="s">&quot;http://live.sysinternals.com/psexec.exe&quot;</span><span class="p">,</span>
+                                <span class="s">&quot;http://live.sysinternals.com/psping.exe&quot;</span><span class="p">,</span> <span class="p">}</span>
+<span class="n">check_files_patch_results</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">class</span> <span class="nc">File_Check_Results</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Analysis Results against File Patching</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">filen</span><span class="p">,</span> <span class="n">filepath</span><span class="p">,</span> <span class="n">exitnode</span><span class="p">,</span> <span class="n">found_hash</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">url</span>           <span class="o">=</span> <span class="n">url</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filename</span>      <span class="o">=</span> <span class="n">filen</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filepath</span>      <span class="o">=</span> <span class="n">filepath</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">exitnode</span>      <span class="o">=</span> <span class="n">exitnode</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filehash</span>      <span class="o">=</span> <span class="n">found_hash</span>
+
+
+<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c">#------------------- DNS Poison Section ----------------------------------------</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="kn">import</span> <span class="nn">dns.resolver</span>
+<span class="kn">import</span> <span class="nn">socks</span>
+<span class="kn">import</span> <span class="nn">socket</span>
+
+<span class="n">check_domain_poison_results</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">domains</span>                     <span class="o">=</span> <span class="p">{</span>
+                                 <span class="s">&quot;www.youporn.com&quot;</span><span class="p">,</span>
+                                 <span class="s">&quot;youporn.com&quot;</span><span class="p">,</span>
+                                 <span class="s">&quot;www.torproject.org&quot;</span><span class="p">,</span>
+                                 <span class="s">&quot;www.wikileaks.org&quot;</span><span class="p">,</span>
+                                 <span class="s">&quot;www.i2p2.de&quot;</span><span class="p">,</span>
+                                 <span class="s">&quot;torrentfreak.com&quot;</span><span class="p">,</span>
+                                 <span class="s">&quot;blockchain.info&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">Domain_Poison_Check</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Analysis Results against Domain Poison</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">domain</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">domain</span>  <span class="o">=</span> <span class="n">domain</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">address</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">path</span>    <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span> <span class="nf">pushAddr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">add</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">address</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">add</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">pushPath</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">path</span>
+
+<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c">#------------------- SSL Sltrip Section ----------------------------------------</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="kn">import</span> <span class="nn">OpenSSL</span>
+<span class="kn">import</span> <span class="nn">ssl</span>
+
+<span class="n">check_ssl_strip_results</span>   <span class="o">=</span> <span class="p">[]</span>
+<span class="n">ssl_strip_monitored_urls</span> <span class="o">=</span> <span class="p">{</span>
+                            <span class="s">&quot;www.google.com&quot;</span><span class="p">,</span>
+                            <span class="s">&quot;www.microsoft.com&quot;</span><span class="p">,</span>
+                            <span class="s">&quot;www.apple.com&quot;</span><span class="p">,</span>
+                            <span class="s">&quot;www.bbc.com&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">SSL_Strip_Check</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Analysis Result against SSL Strip</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">domain</span><span class="p">,</span> <span class="n">public_key</span><span class="p">,</span> <span class="n">serial_number</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">domain</span>        <span class="o">=</span> <span class="n">domain</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">public_key</span>    <span class="o">=</span> <span class="n">public_key</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">serial_number</span> <span class="o">=</span> <span class="n">serial_number</span>
+
+
+<span class="c">#-------------------------------------------------------------------------------</span>
+<span class="c">#----------------     Starting Coding   ----------------------------------------</span>
+<span class="c">#-------------------------------------------------------------------------------</span>
+
+
+<span class="k">def</span> <span class="nf">sslCheckOriginal</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Download the original Certificate without TOR connection</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&#39;[+] Populating SSL for later check&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">ssl_strip_monitored_urls</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">cert</span> <span class="o">=</span> <span class="n">ssl</span><span class="o">.</span><span class="n">get_server_certificate</span><span class="p">((</span><span class="nb">str</span><span class="p">(</span><span class="n">url</span><span class="p">),</span> <span class="mi">443</span><span class="p">))</span>
+            <span class="n">x509</span> <span class="o">=</span> <span class="n">OpenSSL</span><span class="o">.</span><span class="n">crypto</span><span class="o">.</span><span class="n">load_certificate</span><span class="p">(</span><span class="n">OpenSSL</span><span class="o">.</span><span class="n">crypto</span><span class="o">.</span><span class="n">FILETYPE_PEM</span><span class="p">,</span> <span class="n">cert</span><span class="p">)</span>
+            <span class="n">p_k</span>  <span class="o">=</span> <span class="n">x509</span><span class="o">.</span><span class="n">get_pubkey</span><span class="p">()</span>
+            <span class="n">s_n</span>  <span class="o">=</span> <span class="n">x509</span><span class="o">.</span><span class="n">get_serial_number</span><span class="p">()</span>
+
+            <span class="k">print</span><span class="p">(</span><span class="s">&#39;[+] Acquired Certificate: </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">url</span><span class="p">)</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">&#39;    |_________&gt; serial_number </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">s_n</span><span class="p">)</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">&#39;    |_________&gt; public_key </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">p_k</span><span class="p">)</span>
+
+            <span class="n">check_ssl_strip_results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">SSL_Strip_Check</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">p_k</span><span class="p">,</span> <span class="n">s_n</span><span class="p">))</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">&#39;[-] Error While Acquiring certificats on setup phase !&#39;</span><span class="p">)</span>
+            <span class="n">traceback</span><span class="o">.</span><span class="n">print_exc</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+
+<span class="k">def</span> <span class="nf">fileCheckOriginal</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Downloading file ORIGINAL without TOR</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="s">&#39;[+] Populating File Hasing for later check&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">check_files</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">query</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+            <span class="n">file_name</span> <span class="o">=</span> <span class="n">url</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">_</span><span class="p">,</span><span class="n">tmp_file</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">mkstemp</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s">&quot;exitmap_</span><span class="si">%s</span><span class="s">_&quot;</span> <span class="o">%</span> <span class="n">file_name</span><span class="p">)</span>
+
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">tmp_file</span><span class="p">,</span> <span class="s">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fd</span><span class="p">:</span>
+                <span class="n">fd</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+                <span class="k">print</span><span class="p">(</span><span class="s">&#39;[+] Saving File  </span><span class="se">\&quot;</span><span class="si">%s</span><span class="se">\&quot;</span><span class="s">.&#39;</span> <span class="o">%</span> <span class="n">tmp_file</span><span class="p">)</span>
+                <span class="n">check_files_patch_results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">File_Check_Results</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">file_name</span><span class="p">,</span> <span class="n">tmp_file</span><span class="p">,</span> <span class="s">&quot;NO&quot;</span><span class="p">,</span> <span class="n">sha512_file</span><span class="p">(</span><span class="n">tmp_file</span><span class="p">))</span> <span class="p">)</span>
+                <span class="k">print</span><span class="p">(</span><span class="s">&#39;[+] First Time we see the file..&#39;</span><span class="p">)</span>
+                <span class="k">print</span><span class="p">(</span><span class="s">&#39;    |_________&gt; exitnode : None&#39;</span>       <span class="p">)</span>
+                <span class="k">print</span><span class="p">(</span><span class="s">&#39;    |_________&gt; :url:  </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>     <span class="p">)</span>
+                <span class="k">print</span><span class="p">(</span><span class="s">&#39;    |_________&gt; :filePath:  </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">tmp_file</span><span class="p">))</span>
+                <span class="k">print</span><span class="p">(</span><span class="s">&#39;    |_________&gt; :file Hash: </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">sha512_file</span><span class="p">(</span><span class="n">tmp_file</span><span class="p">)))</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+                <span class="k">print</span><span class="p">(</span><span class="s">&#39;[-] Error ! </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">err</span><span class="p">)</span>
+                <span class="n">traceback</span><span class="o">.</span><span class="n">print_exc</span><span class="p">()</span>
+                <span class="k">pass</span>
+    <span class="k">return</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+
+<span class="k">def</span> <span class="nf">resolveOriginalDomains</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Resolving DNS For original purposes</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&#39;[+] Populating Domain Name Resolution for later check &#39;</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">domain</span> <span class="ow">in</span> <span class="n">domains</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">dns</span><span class="o">.</span><span class="n">resolver</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">domain</span><span class="p">)</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="n">Domain_Poison_Check</span><span class="p">(</span><span class="n">domain</span><span class="p">)</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">&#39;[+] Domain: </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">domain</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">response</span><span class="p">:</span>
+                <span class="k">print</span><span class="p">(</span><span class="s">&#39; |____&gt; maps to </span><span class="si">%s</span><span class="s">.&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">record</span><span class="o">.</span><span class="n">address</span><span class="p">))</span>
+                <span class="n">d</span><span class="o">.</span><span class="n">pushAddr</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
+            <span class="n">check_domain_poison_results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&#39;[+] Exception: </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">err</span><span class="p">)</span>
+        <span class="n">traceback</span><span class="o">.</span><span class="n">print_exc</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+
+<span class="k">def</span> <span class="nf">query</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  Uses pycurl to fetch a site using the proxy on the SOCKS_PORT.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="n">output</span> <span class="o">=</span> <span class="n">StringIO</span><span class="o">.</span><span class="n">StringIO</span><span class="p">()</span>
+  <span class="n">query</span> <span class="o">=</span> <span class="n">pycurl</span><span class="o">.</span><span class="n">Curl</span><span class="p">()</span>
+  <span class="n">query</span><span class="o">.</span><span class="n">setopt</span><span class="p">(</span><span class="n">pycurl</span><span class="o">.</span><span class="n">URL</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
+  <span class="n">query</span><span class="o">.</span><span class="n">setopt</span><span class="p">(</span><span class="n">pycurl</span><span class="o">.</span><span class="n">PROXY</span><span class="p">,</span> <span class="s">&#39;localhost&#39;</span><span class="p">)</span>
+  <span class="n">query</span><span class="o">.</span><span class="n">setopt</span><span class="p">(</span><span class="n">pycurl</span><span class="o">.</span><span class="n">PROXYPORT</span><span class="p">,</span> <span class="n">SOCKS_PORT</span><span class="p">)</span>
+  <span class="n">query</span><span class="o">.</span><span class="n">setopt</span><span class="p">(</span><span class="n">pycurl</span><span class="o">.</span><span class="n">PROXYTYPE</span><span class="p">,</span> <span class="n">pycurl</span><span class="o">.</span><span class="n">PROXYTYPE_SOCKS5_HOSTNAME</span><span class="p">)</span>
+  <span class="n">query</span><span class="o">.</span><span class="n">setopt</span><span class="p">(</span><span class="n">pycurl</span><span class="o">.</span><span class="n">CONNECTTIMEOUT</span><span class="p">,</span> <span class="n">CONNECTION_TIMEOUT</span><span class="p">)</span>
+  <span class="n">query</span><span class="o">.</span><span class="n">setopt</span><span class="p">(</span><span class="n">pycurl</span><span class="o">.</span><span class="n">WRITEFUNCTION</span><span class="p">,</span> <span class="n">output</span><span class="o">.</span><span class="n">write</span><span class="p">)</span>
+
+  <span class="k">try</span><span class="p">:</span>
+    <span class="n">query</span><span class="o">.</span><span class="n">perform</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">output</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span>
+  <span class="k">except</span> <span class="n">pycurl</span><span class="o">.</span><span class="n">error</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;Unable to reach </span><span class="si">%s</span><span class="s"> (</span><span class="si">%s</span><span class="s">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">exc</span><span class="p">))</span>
+
+
+
+<span class="k">def</span> <span class="nf">scan</span><span class="p">(</span><span class="n">controller</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  Scan Tor Relays Point to find File Patching</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="k">def</span> <span class="nf">attach_stream</span><span class="p">(</span><span class="n">stream</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">stream</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="s">&#39;NEW&#39;</span><span class="p">:</span>
+      <span class="k">try</span><span class="p">:</span>
+        <span class="n">controller</span><span class="o">.</span><span class="n">attach_stream</span><span class="p">(</span><span class="n">stream</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">circuit_id</span><span class="p">)</span>
+        <span class="c">#print(&#39;[+] New Circuit id (%s) attached and ready to be used!&#39; % circuit_id)</span>
+      <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+        <span class="n">controller</span><span class="o">.</span><span class="n">remove_event_listener</span><span class="p">(</span><span class="n">attach_stream</span><span class="p">)</span>
+        <span class="n">controller</span><span class="o">.</span><span class="n">reset_conf</span><span class="p">(</span><span class="s">&#39;__LeaveStreamsUnattached&#39;</span><span class="p">)</span>
+
+  <span class="k">try</span><span class="p">:</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="s">&#39;[+] Creating a New TOR circuit based on path: </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">path</span><span class="p">)</span>
+    <span class="n">circuit_id</span> <span class="o">=</span> <span class="n">controller</span><span class="o">.</span><span class="n">new_circuit</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">await_build</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span>
+    <span class="n">controller</span><span class="o">.</span><span class="n">add_event_listener</span><span class="p">(</span><span class="n">attach_stream</span><span class="p">,</span> <span class="n">stem</span><span class="o">.</span><span class="n">control</span><span class="o">.</span><span class="n">EventType</span><span class="o">.</span><span class="n">STREAM</span><span class="p">)</span>
+    <span class="n">controller</span><span class="o">.</span><span class="n">set_conf</span><span class="p">(</span><span class="s">&#39;__LeaveStreamsUnattached&#39;</span><span class="p">,</span> <span class="s">&#39;1&#39;</span><span class="p">)</span>  <span class="c"># leave stream management to us</span>
+    <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+    <span class="n">socks</span><span class="o">.</span><span class="n">setdefaultproxy</span><span class="p">(</span><span class="n">socks</span><span class="o">.</span><span class="n">PROXY_TYPE_SOCKS5</span><span class="p">,</span> <span class="s">&quot;127.0.0.1&quot;</span><span class="p">,</span> <span class="mi">9050</span><span class="p">)</span>
+    <span class="n">socket</span><span class="o">.</span><span class="n">socket</span> <span class="o">=</span> <span class="n">socks</span><span class="o">.</span><span class="n">socket</span>
+
+    <span class="n">ip</span> <span class="o">=</span> <span class="n">query</span><span class="p">(</span><span class="s">&#39;http://ip.42.pl/raw&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">ip</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">country</span>  <span class="o">=</span> <span class="n">geolite2</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span> <span class="nb">str</span><span class="p">(</span><span class="n">ip</span><span class="p">)</span> <span class="p">)</span><span class="o">.</span><span class="n">country</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\n</span><span class="s"> </span><span class="se">\n</span><span class="s">&#39;</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&#39;[+] Performing FilePatch,  DNS Spoofing and Certificate Checking</span><span class="se">\</span>
+<span class="s">              passing through --&gt; </span><span class="si">%s</span><span class="s"> (</span><span class="si">%s</span><span class="s">) </span><span class="se">\n</span><span class="s"> </span><span class="se">\n</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">ip</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">country</span><span class="p">))</span>  <span class="p">)</span>
+
+    <span class="n">time_FileCheck</span> <span class="o">=</span> <span class="n">fileCheck</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&#39;[+] FileCheck took: </span><span class="si">%0.2f</span><span class="s"> seconds&#39;</span>  <span class="o">%</span> <span class="p">(</span> <span class="n">time_FileCheck</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">))</span>
+
+    <span class="c">#time_CertsCheck  = certsCheck(path)</span>
+    <span class="c">#print(&#39;[+] CertsCheck took: %0.2f seconds&#39; % ( time_DNSCheck - start_time))</span>
+
+    <span class="n">time_DNSCheck</span>  <span class="o">=</span> <span class="n">dnsCheck</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&#39;[+] DNSCheck took: </span><span class="si">%0.2f</span><span class="s"> seconds&#39;</span>   <span class="o">%</span> <span class="p">(</span> <span class="n">time_DNSCheck</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">))</span>
+
+  <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span>  <span class="n">err</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&#39;[-] Circuit creation error: </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">path</span><span class="p">)</span>
+
+  <span class="k">return</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span>
+
+<span class="k">def</span> <span class="nf">certsCheck</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    SSL Strip detection</span>
+<span class="sd">    TODO: It&#39;s still a weak control. Need to collect and to compare public_key()</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&#39;[+] Checking Certificates&#39;</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">socks</span><span class="o">.</span><span class="n">setdefaultproxy</span><span class="p">(</span><span class="n">socks</span><span class="o">.</span><span class="n">PROXY_TYPE_SOCKS5</span><span class="p">,</span> <span class="s">&quot;127.0.0.1&quot;</span><span class="p">,</span> <span class="mi">9050</span><span class="p">)</span>
+        <span class="n">socket</span><span class="o">.</span><span class="n">socket</span> <span class="o">=</span> <span class="n">socks</span><span class="o">.</span><span class="n">socket</span>
+
+        <span class="k">for</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">ssl_strip_monitored_urls</span><span class="p">:</span>
+            <span class="n">cert</span> <span class="o">=</span> <span class="n">ssl</span><span class="o">.</span><span class="n">get_server_certificate</span><span class="p">((</span><span class="nb">str</span><span class="p">(</span><span class="n">url</span><span class="p">),</span> <span class="mi">443</span><span class="p">))</span>
+            <span class="n">x509</span> <span class="o">=</span> <span class="n">OpenSSL</span><span class="o">.</span><span class="n">crypto</span><span class="o">.</span><span class="n">load_certificate</span><span class="p">(</span><span class="n">OpenSSL</span><span class="o">.</span><span class="n">crypto</span><span class="o">.</span><span class="n">FILETYPE_PEM</span><span class="p">,</span> <span class="n">cert</span><span class="p">)</span>
+            <span class="n">p_k</span>  <span class="o">=</span> <span class="n">x509</span><span class="o">.</span><span class="n">get_pubkey</span><span class="p">()</span>
+            <span class="n">s_n</span>  <span class="o">=</span> <span class="n">x509</span><span class="o">.</span><span class="n">get_serial_number</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">stored_cert</span> <span class="ow">in</span> <span class="n">check_ssl_strip_results</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">url</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">(</span><span class="n">stored_cert</span><span class="o">.</span><span class="n">domain</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">stored_cert</span><span class="o">.</span><span class="n">serial_number</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">str</span><span class="p">(</span><span class="n">s_n</span><span class="p">):</span>
+                        <span class="k">print</span><span class="p">(</span><span class="s">&#39;[+] ALERT Found SSL Strip on uri (</span><span class="si">%s</span><span class="s">) through path </span><span class="si">%s</span><span class="s"> &#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">path</span><span class="p">))</span>
+                        <span class="k">break</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">print</span><span class="p">(</span><span class="s">&#39;[+] Certificate Check seems to be OK for </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">url</span><span class="p">)</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&#39;[-] Error: </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">err</span><span class="p">)</span>
+        <span class="n">traceback</span><span class="o">.</span><span class="n">print_exc</span><span class="p">()</span>
+
+    <span class="n">socket</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">dnsCheck</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    DNS Poisoning Check</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">socks</span><span class="o">.</span><span class="n">setdefaultproxy</span><span class="p">(</span><span class="n">socks</span><span class="o">.</span><span class="n">PROXY_TYPE_SOCKS5</span><span class="p">,</span> <span class="s">&quot;127.0.0.1&quot;</span><span class="p">,</span> <span class="mi">9050</span><span class="p">)</span>
+        <span class="n">socket</span><span class="o">.</span><span class="n">socket</span> <span class="o">=</span> <span class="n">socks</span><span class="o">.</span><span class="n">socket</span>
+
+        <span class="k">print</span><span class="p">(</span><span class="s">&#39;[+] Checking DNS &#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">domain</span> <span class="ow">in</span> <span class="n">domains</span><span class="p">:</span>
+            <span class="n">ipv4</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">gethostbyname</span><span class="p">(</span><span class="n">domain</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">p_d</span> <span class="ow">in</span> <span class="n">check_domain_poison_results</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">p_d</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">(</span><span class="n">domain</span><span class="p">):</span>
+                    <span class="n">found</span> <span class="o">=</span> <span class="bp">False</span>
+                    <span class="k">for</span> <span class="n">d_ip</span> <span class="ow">in</span> <span class="n">p_d</span><span class="o">.</span><span class="n">address</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">ipv4</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">(</span><span class="n">d_ip</span><span class="p">):</span>
+                            <span class="n">found</span> <span class="o">=</span> <span class="bp">True</span>
+                            <span class="k">break</span>
+                    <span class="k">if</span> <span class="n">found</span> <span class="o">==</span> <span class="bp">False</span><span class="p">:</span>
+                        <span class="k">print</span><span class="p">(</span><span class="s">&#39;[+] ALERT:DNS SPOOFING FOUND: name: </span><span class="si">%s</span><span class="s"> ip: </span><span class="si">%s</span><span class="s">  (path: </span><span class="si">%s</span><span class="s"> )&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">domain</span><span class="p">,</span> <span class="n">ipv4</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span> <span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">print</span><span class="p">(</span><span class="s">&#39;[+] Check DNS (</span><span class="si">%s</span><span class="s">) seems to be OK&#39;</span> <span class="o">%</span> <span class="n">domain</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">&#39;[-] Error: </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">err</span><span class="p">)</span>
+        <span class="n">traceback</span><span class="o">.</span><span class="n">print_exc</span><span class="p">()</span>
+
+    <span class="n">socket</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+
+<span class="k">def</span> <span class="nf">fileCheck</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Downloading file through TOR circuits doing the hashing</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&#39;[+] Checking For File patching &#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">check_files</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c">#File Rereive</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">query</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+            <span class="n">file_name</span> <span class="o">=</span> <span class="n">url</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">_</span><span class="p">,</span><span class="n">tmp_file</span> <span class="o">=</span> <span class="n">tempfile</span><span class="o">.</span><span class="n">mkstemp</span><span class="p">(</span><span class="n">prefix</span><span class="o">=</span><span class="s">&quot;exitmap_</span><span class="si">%s</span><span class="s">_&quot;</span> <span class="o">%</span> <span class="n">file_name</span><span class="p">)</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">tmp_file</span><span class="p">,</span> <span class="s">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fd</span><span class="p">:</span>
+                <span class="n">fd</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">check_files_patch_results</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">url</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+                        <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">filehash</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">str</span><span class="p">(</span><span class="n">sha512_file</span><span class="p">(</span><span class="n">tmp_file</span><span class="p">)):</span>
+                            <span class="k">print</span><span class="p">(</span><span class="s">&#39;[+] ALERT File Patch FOUND !&#39;</span><span class="p">)</span>
+                            <span class="k">print</span><span class="p">(</span><span class="s">&#39;    | exitnode : </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">exitnode</span><span class="p">)</span>      <span class="p">)</span>
+                            <span class="k">print</span><span class="p">(</span><span class="s">&#39;    |_________&gt; url: </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>        <span class="p">)</span>
+                            <span class="k">print</span><span class="p">(</span><span class="s">&#39;    |_________&gt; filePath: </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">filepath</span><span class="p">)</span>   <span class="p">)</span>
+                            <span class="k">print</span><span class="p">(</span><span class="s">&#39;    |_________&gt; fileHash: </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">filehash</span><span class="p">)</span>   <span class="p">)</span>
+                            <span class="c">#check_files_patch_results.append( File_Check_Results(url, file_name, tmp_file, path, sha512_file(tmp_file)) )</span>
+                        <span class="k">else</span> <span class="p">:</span>
+                            <span class="k">print</span><span class="p">(</span><span class="s">&#39;[+] File (</span><span class="si">%s</span><span class="s">) seems to be ok&#39;</span> <span class="o">%</span> <span class="n">i</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
+                        <span class="k">break</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+                <span class="k">print</span><span class="p">(</span><span class="s">&#39;[-] Error ! </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">err</span><span class="p">)</span>
+                <span class="n">traceback</span><span class="o">.</span><span class="n">print_exc</span><span class="p">()</span>
+                <span class="k">pass</span>
+    <span class="k">return</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+
+<span class="k">def</span> <span class="nf">sha512_file</span><span class="p">(</span><span class="n">file_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Calculate SHA512 over the given file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">hash_func</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">()</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="s">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fd</span><span class="p">:</span>
+        <span class="n">hash_func</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">fd</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+
+    <span class="k">return</span> <span class="n">hash_func</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+
+    <span class="n">start_analysis</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&quot;&quot;&quot;</span>
+
+<span class="s">          |=====================================================================|</span>
+<span class="s">          | Find Malicious Relay Nodes is a python script made for checking three|</span>
+<span class="s">          | unique kind of frauds such as:                                      |</span>
+<span class="s">          | (1) File Patching                                                   |</span>
+<span class="s">          | (2) DNS Poison                                                      |</span>
+<span class="s">          | (3) SSL Stripping (MITM SSL)                                        |</span>
+<span class="s">          |=====================================================================|</span>
+
+<span class="s">          &quot;&quot;&quot;</span><span class="p">)</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">          |=====================================================================|</span>
+<span class="s">          |                 Initialization Phase                                |</span>
+<span class="s">          |=====================================================================|</span>
+<span class="s">          &quot;&quot;&quot;</span><span class="p">)</span>
+    <span class="n">dns_setup_time</span>             <span class="o">=</span> <span class="n">resolveOriginalDomains</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&#39;[+] DNS Setup Finished: </span><span class="si">%0.2f</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">dns_setup_time</span> <span class="o">-</span> <span class="n">start_analysis</span><span class="p">))</span>
+    <span class="n">file_check_original_time</span>   <span class="o">=</span> <span class="n">fileCheckOriginal</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&#39;[+] File Setup Finished: </span><span class="si">%0.2f</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">file_check_original_time</span> <span class="o">-</span> <span class="n">start_analysis</span><span class="p">))</span>
+    <span class="n">ssl_checking_original_time</span> <span class="o">=</span> <span class="n">sslCheckOriginal</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&#39;[+] Acquiring Certificates  Setup Finished: </span><span class="si">%0.2f</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">ssl_checking_original_time</span> <span class="o">-</span> <span class="n">start_analysis</span><span class="p">))</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">          |=====================================================================|</span>
+<span class="s">          |                 Analysis  Phase                                     |</span>
+<span class="s">          |=====================================================================|</span>
+<span class="s">          &quot;&quot;&quot;</span><span class="p">)</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="s">&#39;[+] Connecting and Fetching possible Relays ...&#39;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">stem</span><span class="o">.</span><span class="n">control</span><span class="o">.</span><span class="n">Controller</span><span class="o">.</span><span class="n">from_port</span><span class="p">()</span> <span class="k">as</span> <span class="n">controller</span><span class="p">:</span>
+      <span class="n">controller</span><span class="o">.</span><span class="n">authenticate</span><span class="p">()</span>
+
+      <span class="n">net_status</span> <span class="o">=</span> <span class="n">controller</span><span class="o">.</span><span class="n">get_network_statuses</span><span class="p">()</span>
+
+
+      <span class="k">for</span> <span class="n">descriptor</span> <span class="ow">in</span> <span class="n">net_status</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+          <span class="n">fingerprint</span> <span class="o">=</span> <span class="n">descriptor</span><span class="o">.</span><span class="n">fingerprint</span>
+
+          <span class="k">print</span><span class="p">(</span><span class="s">&#39;[+] Selecting a New Exit Point:&#39;</span><span class="p">)</span>
+          <span class="k">print</span><span class="p">(</span><span class="s">&#39;[+] |_________&gt; FingerPrint: </span><span class="si">%s</span><span class="s"> &#39;</span> <span class="o">%</span> <span class="n">fingerprint</span><span class="p">)</span>
+          <span class="k">print</span><span class="p">(</span><span class="s">&#39;[+] |_________&gt; Flags: </span><span class="si">%s</span><span class="s"> &#39;</span> <span class="o">%</span> <span class="n">descriptor</span><span class="o">.</span><span class="n">flags</span><span class="p">)</span>
+          <span class="k">print</span><span class="p">(</span><span class="s">&#39;[+] |_________&gt; Exit_Policies: </span><span class="si">%s</span><span class="s"> &#39;</span> <span class="o">%</span> <span class="n">descriptor</span><span class="o">.</span><span class="n">exit_policy</span><span class="p">)</span>
+
+          <span class="k">if</span> <span class="s">&#39;EXIT&#39;</span> <span class="ow">in</span> <span class="p">(</span><span class="n">flag</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="k">for</span> <span class="n">flag</span> <span class="ow">in</span> <span class="n">descriptor</span><span class="o">.</span><span class="n">flags</span><span class="p">):</span>
+              <span class="k">print</span><span class="p">(</span><span class="s">&#39;[+] Found Exit Point. Performing Scan through EXIT: </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">fingerprint</span><span class="p">)</span>
+              <span class="k">if</span> <span class="bp">None</span> <span class="o">==</span> <span class="n">descriptor</span><span class="o">.</span><span class="n">exit_policy</span><span class="p">:</span>
+                  <span class="k">print</span><span class="p">(</span><span class="s">&#39;[+] No Exit Policies found ... no certs checking&#39;</span><span class="p">)</span>
+                  <span class="n">time_taken</span> <span class="o">=</span> <span class="n">scan</span><span class="p">(</span><span class="n">controller</span><span class="p">,</span> <span class="p">[</span><span class="n">TRUSTED_HOP_FINGERPRINT</span><span class="p">,</span> <span class="n">fingerprint</span><span class="p">])</span>
+          <span class="k">else</span><span class="p">:</span>
+              <span class="c">#print(&#39;[+] Not Exit Point found. Using it as Relay passing to TRUST Exit Point&#39;)</span>
+              <span class="k">pass</span>
+              <span class="c">#time_taken = scan(controller, [fingerprint, TRUSTED_HOP_FINGERPRINT])</span>
+          <span class="c">#print(&#39;[+] Finished Analysis for %s finished  =&gt; %0.2f seconds&#39; % (fingerprint, time_taken))</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">&#39;[-] Exception on  FingerPrint: </span><span class="si">%s</span><span class="s"> =&gt; </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">fingerprint</span><span class="p">,</span> <span class="n">exc</span><span class="p">))</span>
+            <span class="n">traceback</span><span class="o">.</span><span class="n">print_exc</span><span class="p">()</span>
+            <span class="k">pass</span>
+</pre></div>
+</body>
+</html>
